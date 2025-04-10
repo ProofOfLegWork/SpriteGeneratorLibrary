@@ -1,0 +1,5 @@
+April 10 2025
+1. Need to add a periodic archiver to take bad folder to the Archive older
+2. Need to be able to change the sprites to a specifc size
+3. Naming should be good
+4. Antialiasing has to be fixed

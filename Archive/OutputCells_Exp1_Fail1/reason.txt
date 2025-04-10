@@ -1,0 +1,1 @@
+It ended up keeping only the cropped images.
