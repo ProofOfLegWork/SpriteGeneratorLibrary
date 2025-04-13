@@ -1,88 +1,85 @@
-import requests
-from bs4 import BeautifulSoup
-import matplotlib.pyplot as plt
-from collections import defaultdict
+import pygame
+import sys
 
-def fetch_cricket_news(url):
-    """
-    Fetch cricket news from the given URL.
+# Initialize Pygame
+pygame.init()
 
-    Args:
-        url (str): The URL of the cricket news website.
+# Screen dimensions
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 400
 
-    Returns:
-        list: A list of news headlines related to cricket.
-    """
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
+# Colors
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 
-        # Extract headlines (modify the tag and class based on the website's structure)
-        headlines = []
-        for item in soup.find_all('h2', class_='headline'):  # Example: Replace 'h2' and 'headline' with actual tags
-            headlines.append(item.text.strip())
+# Initialize screen
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Mario Simulation")
 
-        return headlines
+# Clock for controlling frame rate
+clock = pygame.time.Clock()
 
-    except Exception as e:
-        print(f"Error fetching cricket news: {e}")
-        return []
+# Mario character
+mario = pygame.Rect(50, 300, 40, 40)  # x, y, width, height
+mario_color = RED
+mario_speed = 5
+mario_jump = -15
+gravity = 1
+velocity_y = 0
+is_jumping = False
 
-def analyze_team_performance(headlines):
-    """
-    Analyze team performance based on cricket news headlines.
+# Platform
+platform = pygame.Rect(0, 350, SCREEN_WIDTH, 50)  # x, y, width, height
 
-    Args:
-        headlines (list): A list of cricket news headlines.
+# Game loop
+def game_loop():
+    global velocity_y, is_jumping
 
-    Returns:
-        dict: A dictionary with team names as keys and their performance scores as values.
-    """
-    teams = ['India', 'Australia', 'England', 'Pakistan', 'South Africa', 'New Zealand', 'Sri Lanka', 'West Indies']
-    performance = defaultdict(int)
+    while True:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-    for headline in headlines:
-        for team in teams:
-            if team in headline:
-                performance[team] += 1
+        # Get keys
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            mario.x -= mario_speed
+        if keys[pygame.K_RIGHT]:
+            mario.x += mario_speed
+        if keys[pygame.K_SPACE] and not is_jumping:
+            velocity_y = mario_jump
+            is_jumping = True
 
-    return performance
+        # Apply gravity
+        velocity_y += gravity
+        mario.y += velocity_y
 
-def plot_team_performance(performance):
-    """
-    Plot the performance of teams based on the analysis.
+        # Check for collision with the platform
+        if mario.colliderect(platform):
+            mario.y = platform.y - mario.height
+            velocity_y = 0
+            is_jumping = False
 
-    Args:
-        performance (dict): A dictionary with team names as keys and their performance scores as values.
-    """
-    teams = list(performance.keys())
-    scores = list(performance.values())
+        # Prevent Mario from going off-screen
+        if mario.x < 0:
+            mario.x = 0
+        if mario.x > SCREEN_WIDTH - mario.width:
+            mario.x = SCREEN_WIDTH - mario.width
 
-    plt.figure(figsize=(10, 6))
-    plt.bar(teams, scores, color='skyblue')
-    plt.xlabel('Teams')
-    plt.ylabel('Performance Score')
-    plt.title('Cricket Team Performance Based on News Headlines')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+        # Draw everything
+        screen.fill(WHITE)  # Clear screen
+        pygame.draw.rect(screen, GREEN, platform)  # Draw platform
+        pygame.draw.rect(screen, mario_color, mario)  # Draw Mario
+
+        # Update display
+        pygame.display.flip()
+
+        # Cap the frame rate
+        clock.tick(60)
 
 if __name__ == "__main__":
-    # URL of the cricket news website (replace with an actual URL)
-    url = "https://cricinfo.com"  # Replace with a real cricket news website
-
-    # Fetch cricket news
-    headlines = fetch_cricket_news(url)
-    print("Fetched Headlines:")
-    for headline in headlines:
-        print(f"- {headline}")
-
-    # Analyze team performance
-    performance = analyze_team_performance(headlines)
-    print("\nTeam Performance:")
-    for team, score in performance.items():
-        print(f"{team}: {score}")
-
-    # Plot team performance
-    plot_team_performance(performance)
+    game_loop()
