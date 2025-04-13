@@ -1,85 +1,45 @@
-import pygame
-import sys
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# Initialize Pygame
-pygame.init()
+# Mock dataset (replace this with real data from a CSV or API)
+data = {
+    "Age Group": ["18-29", "30-39", "40-49", "50-59", "60+"],
+    "Heart Disease Cases": [500, 1200, 3000, 4500, 7000],
+    "Total Population": [10000, 15000, 20000, 25000, 30000],
+}
 
-# Screen dimensions
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 400
+# Convert the data into a DataFrame
+df = pd.DataFrame(data)
 
-# Colors
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+# Calculate the percentage of heart disease cases in each age group
+df["Percentage"] = (df["Heart Disease Cases"] / df["Total Population"]) * 100
 
-# Initialize screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Mario Simulation")
+# Function to plot a pie chart
+def plot_pie_chart(data, labels, title):
+    """
+    Plot a pie chart.
 
-# Clock for controlling frame rate
-clock = pygame.time.Clock()
+    Args:
+        data (list): The data values for the pie chart.
+        labels (list): The labels for each slice of the pie chart.
+        title (str): The title of the pie chart.
+    """
+    plt.figure(figsize=(8, 8))
+    plt.pie(data, labels=labels, autopct="%1.1f%%", startangle=140, colors=plt.cm.Paired.colors)
+    plt.title(title)
+    plt.axis("equal")  # Equal aspect ratio ensures the pie chart is circular.
+    plt.show()
 
-# Mario character
-mario = pygame.Rect(50, 300, 40, 40)  # x, y, width, height
-mario_color = RED
-mario_speed = 5
-mario_jump = -15
-gravity = 1
-velocity_y = 0
-is_jumping = False
+# Plot pie chart for heart disease cases by age group
+plot_pie_chart(
+    data=df["Heart Disease Cases"],
+    labels=df["Age Group"],
+    title="Heart Disease Cases by Age Group"
+)
 
-# Platform
-platform = pygame.Rect(0, 350, SCREEN_WIDTH, 50)  # x, y, width, height
-
-# Game loop
-def game_loop():
-    global velocity_y, is_jumping
-
-    while True:
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-        # Get keys
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            mario.x -= mario_speed
-        if keys[pygame.K_RIGHT]:
-            mario.x += mario_speed
-        if keys[pygame.K_SPACE] and not is_jumping:
-            velocity_y = mario_jump
-            is_jumping = True
-
-        # Apply gravity
-        velocity_y += gravity
-        mario.y += velocity_y
-
-        # Check for collision with the platform
-        if mario.colliderect(platform):
-            mario.y = platform.y - mario.height
-            velocity_y = 0
-            is_jumping = False
-
-        # Prevent Mario from going off-screen
-        if mario.x < 0:
-            mario.x = 0
-        if mario.x > SCREEN_WIDTH - mario.width:
-            mario.x = SCREEN_WIDTH - mario.width
-
-        # Draw everything
-        screen.fill(WHITE)  # Clear screen
-        pygame.draw.rect(screen, GREEN, platform)  # Draw platform
-        pygame.draw.rect(screen, mario_color, mario)  # Draw Mario
-
-        # Update display
-        pygame.display.flip()
-
-        # Cap the frame rate
-        clock.tick(60)
-
-if __name__ == "__main__":
-    game_loop()
+# Plot pie chart for percentage of heart disease cases by age group
+plot_pie_chart(
+    data=df["Percentage"],
+    labels=df["Age Group"],
+    title="Percentage of Heart Disease Cases by Age Group"
+)
