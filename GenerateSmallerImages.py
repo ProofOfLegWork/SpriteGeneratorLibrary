@@ -3,7 +3,7 @@ import numpy as np
 import os
 from datetime import datetime
 
-def split_image_by_empty_space(image_path, output_folder, min_area=1000):
+def split_image_by_empty_space(image_path, output_folder, file_name, min_area=1000):
     # Load the image
     image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -27,13 +27,13 @@ def split_image_by_empty_space(image_path, output_folder, min_area=1000):
         x, y, w, h = cv2.boundingRect(cnt)
         if w * h > min_area:  # Filter out noise
             sub_img = image[y:y+h, x:x+w]
-            cv2.imwrite(f"{output_folder}/cell_{i+1:03d}.png", sub_img)
+            cv2.imwrite(f"{output_folder}/{file_name}_{i+1:03d}.png", sub_img)
 
     print(f"✅ Done! Saved {len(contours)} cropped images to {output_folder}")
 
 # Example usage
 # Create a folder with the current time up to seconds
-current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-output_folder = f"output_cells_{current_time}"
+# current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+# output_folder = f"output_cells_{current_time}"
 
 #split_image_by_empty_space("Images/NormalPeople_1.png", output_folder)
