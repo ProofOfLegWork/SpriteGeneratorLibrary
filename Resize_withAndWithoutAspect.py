@@ -81,7 +81,7 @@ def resize_images_with_background(folder, target_width=340):
         except Exception as e:
             print(f"Error processing {filename}: {e}")
 
-if __name__ == "__main__":
-    input_folder = "OutputCells_Exp1_Correct"  # Replace with your input folder path
-    new_folder = copy_folder_with_timestamp(input_folder)
-    resize_images_with_background_no_ar(new_folder)
+# if __name__ == "__main__":
+#     input_folder = "OutputCells_Exp1_Correct"  # Replace with your input folder path
+#     new_folder = copy_folder_with_timestamp(input_folder)
+#     resize_images_with_background_no_ar(new_folder)
