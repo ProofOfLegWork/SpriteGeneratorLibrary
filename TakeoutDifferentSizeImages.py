@@ -44,5 +44,5 @@ def process_images(folder_path, output_prefix="image"):
     print(f"✅ Process completed. {valid_count} images renamed with prefix '{output_prefix}'.")
 
 # Example usage
-folder_path = "OutputCells_Exp1"  # Replace with the path to your folder
-process_images(folder_path, output_prefix="character")
+# folder_path = "OutputCells_Exp1"  # Replace with the path to your folder
+# process_images(folder_path, output_prefix="character")
