@@ -69,6 +69,6 @@ def remove_small_images(folder_path, size_threshold_ratio=0.5):
     print(f"✅ Process completed. {removed_count} images removed.")
 
 # Example usage
-source_folder = "OutputCells_Exp1"  # Replace with the path to your folder
-backup_folder = copy_folder_with_timestamp(source_folder)
-remove_small_images(backup_folder, size_threshold_ratio=0.5)
+# source_folder = "OutputCells_Exp1"  # Replace with the path to your folder
+# backup_folder = copy_folder_with_timestamp(source_folder)
+# remove_small_images(backup_folder, size_threshold_ratio=0.5)
