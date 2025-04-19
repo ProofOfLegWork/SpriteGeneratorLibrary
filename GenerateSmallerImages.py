@@ -36,4 +36,4 @@ def split_image_by_empty_space(image_path, output_folder, min_area=1000):
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 output_folder = f"output_cells_{current_time}"
 
-split_image_by_empty_space("Images/NormalPeople_1.png", output_folder)
+#split_image_by_empty_space("Images/NormalPeople_1.png", output_folder)
